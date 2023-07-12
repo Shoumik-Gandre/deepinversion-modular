@@ -147,10 +147,10 @@ def main(
     student = LeNet5BN(in_channels=3, num_labels=10).to(device).train()
 
     hyperparams = StudentTrainerHyperparams(
-        epochs=100,
-        batch_size=256,
+        epochs=1000,
+        batch_size=64,
         teacher_temperature=20,
-        optimizer=torch.optim.SGD(student.parameters(), 0.01)
+        optimizer=torch.optim.Adam(student.parameters())
     )
 
     trainer = StudentTrainer(
