@@ -13,6 +13,9 @@ import torchvision
 from torchvision.transforms import transforms
 from tqdm import tqdm
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath('..'))
 from models.lenet_bn import LeNet5BN
 
 
