@@ -1,3 +1,4 @@
+import math
 import os
 from pathlib import Path
 
@@ -34,9 +35,16 @@ def main(
         hyperparams=hyperparams, 
         device=device
     )
-    inputs, labels = synthesizer.synthesize_batch()
     file_count_labelwise = np.zeros(10, dtype=int)
-    save_synthesized_images_labelwise(inputs, labels, file_count_labelwise, Path(save_root))
+    for samples in range(conf.num_samples // hyperparams.batch_size)):
+        inputs, labels = synthesizer.synthesize_batch()
+        save_synthesized_images_labelwise(inputs, labels, file_count_labelwise, Path(save_root))
+    
+    # Last batch len(last batch) may not equal batch size
+    if conf.num_samples % hyperparams.batch_size:
+        synthesizer.hyperparams.batch_size = conf.num_samples % hyperparams.batch_size
+        inputs, labels = synthesizer.synthesize_batch()
+        save_synthesized_images_labelwise(inputs, labels, file_count_labelwise, Path(save_root))
 
 
 if __name__ == '__main__':

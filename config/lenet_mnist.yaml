@@ -8,3 +8,5 @@ hyperparams:
   coeff_tv_l1: 0.0
   bn_coeff: 0.05
   loss_coeff: 1.0
+
+num_samples: 12000
