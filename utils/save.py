@@ -13,7 +13,7 @@ def save_synthesized_images_labelwise(
     ) -> None:
 
     for image, label in zip(inputs, labels):
-        save_dir = root_dir / str(label)
+        save_dir = root_dir / str(label.item())
         save_dir.mkdir(parents=True, exist_ok=True)
 
         save_image(
