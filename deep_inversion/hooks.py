@@ -1,3 +1,4 @@
+from typing import Tuple
 import torch
 import torch.nn as nn
 from .regularizations import regularize_feature_map
@@ -16,16 +17,14 @@ class FeatureMapStatisticsRegularizerHook:
         self.hook = module.register_forward_hook(self.hook_fn)
         self.term: torch.Tensor = None
 
-    def hook_fn(self, module: nn.BatchNorm2d, input: torch.Tensor, output: torch.Tensor):
+    def hook_fn(self, module: nn.BatchNorm2d, input: Tuple[torch.Tensor], output: torch.Tensor):
         # hook co compute deepinversion's feature distribution regularization
 
         # feature map is the input to the batchnormalization layer
-        print(type(input))
-        print(input)
-        if isinstance(input, torch.Tensor):
-            feature_map = input
-        else:
-            feature_map, _ = input
+        feature_map = input[0]
+
+        assert module.running_mean is not None
+        assert module.running_var is not None
 
         batchnorm_running_mean = module.running_mean.detach()
         batchnorm_running_var  = module.running_var.detach()
