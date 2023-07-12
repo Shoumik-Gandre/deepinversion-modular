@@ -104,7 +104,10 @@ def main(
         real_data_root: str,
         synthetic_data_root: str,
         teacher_model_path: str,
-        model_save_path: str
+        model_save_path: str,
+        num_epochs: int = 200,
+        batch_size: int = 64,
+        temperature: float = 20,
     ):    
 
     device = torch.device('cuda')
@@ -147,9 +150,9 @@ def main(
     student = LeNet5BN(in_channels=3, num_labels=10).to(device).train()
 
     hyperparams = StudentTrainerHyperparams(
-        epochs=1000,
-        batch_size=64,
-        teacher_temperature=20,
+        epochs=num_epochs,
+        batch_size=batch_size,
+        teacher_temperature=temperature,
         optimizer=torch.optim.Adam(student.parameters())
     )
 
