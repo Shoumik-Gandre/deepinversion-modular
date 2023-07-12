@@ -150,7 +150,7 @@ def main(
         epochs=100,
         batch_size=256,
         teacher_temperature=20,
-        optimizer=torch.optim.SGD(student.parameters(), 0.0001)
+        optimizer=torch.optim.SGD(student.parameters(), 0.01)
     )
 
     trainer = StudentTrainer(
