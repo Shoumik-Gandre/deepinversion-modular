@@ -134,7 +134,7 @@ def main(
         download=True
     )
 
-    Path(teacher_model_path).mkdir(parents=True, exist_ok=True)
+    Path(teacher_model_path).parent.mkdir(parents=True, exist_ok=True)
     teacher: LeNet5BN = torch.load(teacher_model_path, device).eval()
     student = LeNet5BN(in_channels=3, num_labels=10).to(device).train()
 
