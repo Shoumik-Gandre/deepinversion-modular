@@ -149,7 +149,7 @@ def main(
     hyperparams = StudentTrainerHyperparams(
         epochs=100,
         batch_size=256,
-        teacher_temperature=5,
+        teacher_temperature=20,
         optimizer=torch.optim.Adam(student.parameters())
     )
 
