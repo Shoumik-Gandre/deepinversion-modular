@@ -36,12 +36,14 @@ def main(
         device=device
     )
     file_count_labelwise = np.zeros(10, dtype=int)
-    for samples in range(conf.num_samples // hyperparams.batch_size)):
+    for batch in range(conf.num_samples // hyperparams.batch_size):
+        print(f"batch [{batch}/{math.ceil(conf.num_samples / hyperparams.batch_size)}]")
         inputs, labels = synthesizer.synthesize_batch()
         save_synthesized_images_labelwise(inputs, labels, file_count_labelwise, Path(save_root))
     
     # Last batch len(last batch) may not equal batch size
     if conf.num_samples % hyperparams.batch_size:
+        print(f"batch [{math.ceil(conf.num_samples / hyperparams.batch_size)}/{math.ceil(conf.num_samples / hyperparams.batch_size)}]")
         synthesizer.hyperparams.batch_size = conf.num_samples % hyperparams.batch_size
         inputs, labels = synthesizer.synthesize_batch()
         save_synthesized_images_labelwise(inputs, labels, file_count_labelwise, Path(save_root))
