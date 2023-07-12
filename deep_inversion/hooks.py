@@ -15,9 +15,9 @@ class FeatureMapStatisticsRegularizerHook:
     '''
     def __init__(self, module: nn.Module):
         self.hook = module.register_forward_hook(self.hook_fn)
-        self.term: torch.Tensor = None
+        self.term: torch.Tensor = torch.tensor(0.0)
 
-    def hook_fn(self, module: nn.BatchNorm2d, input: Tuple[torch.Tensor], output: torch.Tensor):
+    def hook_fn(self, module: nn.BatchNorm2d, input: Tuple[torch.Tensor, ...], output: torch.Tensor):
         # hook co compute deepinversion's feature distribution regularization
 
         # feature map is the input to the batchnormalization layer
