@@ -5,7 +5,7 @@ import torch
 import os
 import sys
 
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset, DataLoader, TensorDataset
 import torch.nn.functional as F
 from torchvision import datasets, transforms
 from tqdm import tqdm 
@@ -109,7 +109,7 @@ def main(
 
     device = torch.device('cuda')
     # Synthetic Dataset
-    synthetic_dataset = datasets.ImageFolder(
+    train_dataset = datasets.ImageFolder(
         root=synthetic_data_root, 
         transform=transforms.Compose([  
             # transforms.Grayscale(3),
@@ -119,6 +119,11 @@ def main(
             # transforms.Normalize((0.1307,), (0.3081,)),
         ])
     )
+    _images = torch.stack([train_data[0] for train_data in train_dataset])
+    _labels = torch.tensor([train_data[1] for train_data in train_dataset], dtype=torch.long)
+
+    train_dataset = TensorDataset(_images, _labels)
+    
 
     # Test Dataset
     eval_dataset = datasets.MNIST(
@@ -133,13 +138,16 @@ def main(
         ]),
         download=True
     )
+    eval_images = torch.stack([train_data[0] for train_data in eval_dataset])
+    eval_labels = torch.tensor([train_data[1] for train_data in eval_dataset], dtype=torch.long)
+    eval_dataset = TensorDataset(eval_images, eval_labels)
 
     Path(teacher_model_path).parent.mkdir(parents=True, exist_ok=True)
     teacher: LeNet5BN = torch.load(teacher_model_path, device).eval()
     student = LeNet5BN(in_channels=3, num_labels=10).to(device).train()
 
     hyperparams = StudentTrainerHyperparams(
-        epochs=20,
+        epochs=100,
         batch_size=256,
         teacher_temperature=5,
         optimizer=torch.optim.Adam(student.parameters())
@@ -149,7 +157,7 @@ def main(
         teacher=teacher,
         student=student,
         model_save_path=Path(model_save_path),
-        train_dataset=synthetic_dataset,
+        train_dataset=train_dataset,
         test_dataset=eval_dataset,
         hyperparams=hyperparams,
         device=device

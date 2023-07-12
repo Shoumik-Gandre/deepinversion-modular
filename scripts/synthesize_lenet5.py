@@ -37,7 +37,7 @@ def main(
     )
     file_count_labelwise = np.zeros(10, dtype=int)
     for batch in range(conf.num_samples // hyperparams.batch_size):
-        print(f"batch [{batch}/{math.ceil(conf.num_samples / hyperparams.batch_size)}]")
+        print(f"batch [{batch+1}/{math.ceil(conf.num_samples / hyperparams.batch_size)}]")
         inputs, labels = synthesizer.synthesize_batch()
         save_synthesized_images_labelwise(inputs, labels, file_count_labelwise, Path(save_root))
     
