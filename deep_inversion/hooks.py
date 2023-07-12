@@ -20,6 +20,8 @@ class FeatureMapStatisticsRegularizerHook:
         # hook co compute deepinversion's feature distribution regularization
 
         # feature map is the input to the batchnormalization layer
+        print(type(input))
+        print(input)
         if isinstance(input, torch.Tensor):
             feature_map = input
         else:
